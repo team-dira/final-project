@@ -1,9 +1,13 @@
-function errorHandler(err, req, res, next) {
-  console.log(err);
-  if (err) {
-    res.status(500).json({
-      msg: 'internal server error',
-    });
+function errorHandler(err, req, res) {
+  if (err.msg === 'Wrong email / password') {
+    res.status(400).json({
+      error: err.msg
+    })
+  }
+  else if (err.msg === 'SequelizeValidationError') {
+    res.status(400).json({
+      error: err.msg
+    })
   }
 }
 

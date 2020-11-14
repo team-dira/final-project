@@ -14,9 +14,24 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserPost.init(
     {
-      title: DataTypes.STRING,
-      thumbnail_url: DataTypes.STRING,
-      caption: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { args: true, msg: 'cannot be empty' }
+        }
+      },
+      thumbnail_url: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { args: true, msg: 'cannot be empty' }
+        }
+      },
+      caption: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: { args: true, msg: 'cannot be empty' }
+        }
+      },
       UserId: DataTypes.INTEGER,
     },
     {
