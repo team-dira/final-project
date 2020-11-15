@@ -46,7 +46,6 @@ class Controller {
           access_token: access_token,
           email: user.email
         })
-
       })
       .catch(err => {
         next(err)
@@ -74,12 +73,12 @@ class Controller {
   }
 
   static getPostById(req, res, next) {
-    User.findOne({
-      where: { id: req.params.id }
+    UserPost.findOne({
+      where: { id: +req.params.id }
     })
       .then(data => {
         if (data) {
-          res.status(201).json(data)
+          res.status(200).json(data)
         }
         else {
           throw {
@@ -97,7 +96,7 @@ class Controller {
   }
 
   static delPostById(req, res, next) {
-    res.status(200).json({ msg: 'delete succeed' })
+    res.status(200).json({ msg: 'Delete succeed' })
   }
 }
 

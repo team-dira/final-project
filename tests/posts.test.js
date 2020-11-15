@@ -63,7 +63,7 @@ describe('posts test', () => {
       where: {},
       truncate: true
     })
-      .then(_=> {
+      .then(_ => {
         done()
       })
       .catch(err => {
@@ -99,8 +99,8 @@ describe('posts test', () => {
           if (err) {
             done(err);
           } else {
-            expect(res.body).toHaveProperty('id', postId);
-            expect(res.body).toHaveProperty('title', 'Testing Corona');
+            expect(res.body).toHaveProperty('id', expect.any(Number));
+            expect(res.body).toHaveProperty('title', expect.any(String));
             done();
           }
         });

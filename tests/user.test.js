@@ -59,6 +59,23 @@ describe('User Login', () => {
         }
       })
   })
+
+  test('succes fetching User data', (done) => {
+    request(app)
+      .get('/users')
+      .set('access_token', jwt.sign({ email: 'David@mail.com', id: 2 }, process.env.JWT_SECRET))
+      .end(function (err, res) {
+        if (err) {
+          done(err)
+        }
+        else {
+          expect(res.status).toBe(200)
+          expect(res.body).toBeInstanceOf(Array)
+          expect(res.body[0]).toHaveProperty('email', 'alex@mail.com')
+          done()
+        }
+      })
+  })
   test('fail login invalid password', (done) => {
     request(app)
       .post('/login')

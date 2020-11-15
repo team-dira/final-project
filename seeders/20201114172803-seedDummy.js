@@ -59,7 +59,8 @@ module.exports = {
         role: 'adviseryBoard',
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      },
+      
     ])
   },
 
