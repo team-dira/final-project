@@ -19,6 +19,30 @@ module.exports = {
         UserId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        title: 'Testing Article',
+        thumbnail_url: 'disease.png',
+        caption: 'Lorem ipsum dolor sit amet bla bla bla',
+        UserId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        title: 'Testing Article',
+        thumbnail_url: 'disease.png',
+        caption: 'Lorem ipsum dolor sit amet bla bla bla',
+        UserId: 4,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        title: 'Testing Article',
+        thumbnail_url: 'disease.png',
+        caption: 'Lorem ipsum dolor sit amet bla bla bla',
+        UserId: 3,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {})
   },
