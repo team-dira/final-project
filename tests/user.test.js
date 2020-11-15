@@ -76,6 +76,7 @@ describe('User Login', () => {
         }
       })
   })
+  
   test('fail login invalid password', (done) => {
     request(app)
       .post('/login')
@@ -94,6 +95,7 @@ describe('User Login', () => {
         }
       })
   })
+
   test('fail because unregistered email', (done) => {
     request(app)
       .post('/login')

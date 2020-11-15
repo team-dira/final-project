@@ -50,7 +50,8 @@ describe('posts test', () => {
           UserId: data.id
         })
       })
-      .then(() => {
+      .then((data) => {
+        postId = data.id
         done()
       })
       .catch(err => {
@@ -194,6 +195,7 @@ describe('posts test', () => {
         .set('access_token', advisorToken)
         .expect(200)
         .end((err, res) => {
+          console.log(postId,advisorId)
           if (err) {
             done(err)
           }

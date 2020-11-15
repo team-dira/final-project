@@ -12,40 +12,30 @@ class Controller {
       }
     })
       .then(user => {
-        // if (!user) {
-        //   throw {
-        //     msg: 'wrong email / password'
-        //   }
-        // }
-        // else {
-        //   const validPassword = bcrypt.compareSync(password, user.password)
-        //   if (!validPassword) {
-        //     throw {
-        //       name: "invalid email / password"
-        //     }
-        //   } else {
-        //     const access_token = jwt.sign({
-        //       email: user.email,
-        //       id: user.id
-        //     }, process.env.JWT_SECRET)
-        //     console.log(access_token)
-        //     res.status(200).json({
-        //       message: "Login Succeed",
-        //       access_token: access_token,
-        //       email: user.email
-        //     })
-        //   }
-        // }
-        const access_token = jwt.sign({
-          email: user.email,
-          id: user.id
-        }, process.env.JWT_SECRET)
-        console.log(access_token)
-        res.status(200).json({
-          message: "Login Succeed",
-          access_token: access_token,
-          email: user.email
-        })
+        if (!user) {
+          throw {
+            msg: 'wrong email / password'
+          }
+        }
+        else {
+          const validPassword = bcrypt.compareSync(password, user.password)
+          if (!validPassword) {
+            throw {
+              name: "invalid email / password"
+            }
+          } else {
+            const access_token = jwt.sign({
+              email: user.email,
+              id: user.id
+            }, process.env.JWT_SECRET)
+            console.log(access_token)
+            res.status(200).json({
+              message: "Login Succeed",
+              access_token: access_token,
+              email: user.email
+            })
+          }
+        }
       })
       .catch(err => {
         next(err)
@@ -96,7 +86,20 @@ class Controller {
   }
 
   static delPostById(req, res, next) {
-    res.status(200).json({ msg: 'Delete succeed' })
+    const { id } = req.params
+    UserPost.destroy({
+      where: {
+        id:id
+      }
+    })
+      .then(_ => {
+        res.status(200).json({
+          msg: 'Delete succeed'
+        })
+      })
+      .catch(err=>{
+        next(err)
+      })
   }
 }
 
