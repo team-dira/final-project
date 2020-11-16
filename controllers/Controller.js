@@ -82,14 +82,29 @@ class Controller {
   }
 
   static createPost(req, res, next) {
-    res.status(201).json({ msg: 'create post succeed' })
+    const { title, thumbnail_url, caption } = req.body
+    UserPost.create({
+      title,
+      thumbnail_url,
+      caption,
+      UserId: req.decodedUser.id
+    })
+      .then(data => {
+        res.status(201).json({
+          data: data,
+          msg: 'create post succeed'
+        })
+      })
+      .catch(err => {
+        next(err)
+      })
   }
 
   static delPostById(req, res, next) {
     const { id } = req.params
     UserPost.destroy({
       where: {
-        id:id
+        id: id
       }
     })
       .then(_ => {
@@ -97,7 +112,7 @@ class Controller {
           msg: 'Delete succeed'
         })
       })
-      .catch(err=>{
+      .catch(err => {
         next(err)
       })
   }
