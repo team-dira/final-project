@@ -1,28 +1,28 @@
 const { UserPost } = require('../models')
 
-function Authorization(req, res, next) {
-  const id = req.params.id
-  UserPost.findByPk(id)
-    .then(post => {
-      if (post === null) {
-        throw {
-          msg: 'Not found'
-        }
+async function Authorization(req, res, next) {
+  try {
+    const data = await UserPost.findByPk(req.params.id)
+    if (!data) {
+      throw {
+        msg: 'Not Found'
       }
-      else {
-        if(post.UserId === req.decodedUser.id){
-          next()
-        }
-        else{
-          throw {
-            msg: 'Unauthorized'
-          }
-        }
-      }
-    })
-    .catch(err=>{
-      next(err)
-    })
+    }
+
+    if (data.UserId !== req.decodedUser.id) {
+      res.status(400).json({
+        msg: 'Unauthorized'
+      })
+    }
+    else {
+      next()
+    }
+    throw err
+  }
+  catch (err) {
+    console.log(err)
+    next(err)
+  }
 }
 
 module.exports = Authorization

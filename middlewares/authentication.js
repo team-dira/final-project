@@ -1,35 +1,36 @@
 const jwt = require(`jsonwebtoken`)
 const { User } = require(`../models`)
 
-function authentication(req, res, next) {
-  if (!req.headers.access_token) {
-    res.status(401).json('cannot authenticate')
-  }
-  else {
-    try {
-      let payload = jwt.verify(req.headers.access_token, process.env.JWT_SECRET)
-      User.findOne({
-        where: { id: payload.id }
-      })
-        .then(user => {
-          if (user) {
-            req.decodedUser = payload
-            next()
-          }
-          else {
-            throw {
-              msg: 'canoot access'
-            }
-          }
-        })
-        .catch(err => {
-          next(err)
-        })
+async function authentication(req, res, next) {
+
+  try {
+    if (!req.headers.access_token) {
+      throw {
+        msg: 'cannot access'
+      }
     }
-    catch (err) {
-      res.status(400).json({ msg: 'cannot access' })
+    else {
+      let decoded = jwt.verify(req.headers.access_token, process.env.JWT_SECRET)
+      if (decoded) {
+        const userData = await User.findByPk(decoded.id)
+        if (userData) {
+          req.decodedUser = decoded
+          next()
+        }
+        else {
+          throw err
+        }
+      }
+      else {
+        throw err
+      }
     }
   }
+  catch (err) {
+    console.log(err)
+    next(err)
+  }
+
 }
 
 module.exports = authentication

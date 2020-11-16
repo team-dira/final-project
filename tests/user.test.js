@@ -22,6 +22,7 @@ describe('User Login', () => {
       role: 'adviseryBoard'
     })
       .then(() => {
+        console.log('success setting user')
         done()
       })
       .catch(err => {
@@ -32,12 +33,15 @@ describe('User Login', () => {
   afterAll((done) => {
     User.destroy({
       where: {},
-      truncate: true
+      truncate: true,
+      cascade: true
     })
       .then(_ => {
+        console.log('success destroying user')
         done()
       })
       .catch(err => {
+        console.log(err)
         done(err)
       })
   })
@@ -71,7 +75,7 @@ describe('User Login', () => {
         else {
           expect(res.status).toBe(200)
           expect(res.body).toBeInstanceOf(Array)
-          expect(res.body[0]).toHaveProperty('email', 'alex@mail.com')
+          expect(res.body[0]).toHaveProperty('email', 'David@mail.com')
           done()
         }
       })
@@ -90,7 +94,7 @@ describe('User Login', () => {
         }
         else {
           expect(res.status).toBe(400)
-          expect(res.body).toHaveProperty('message', 'Wrong password')
+          expect(res.body).toHaveProperty('msg', 'Wrong email / password')
           done()
         }
       })
@@ -109,7 +113,7 @@ describe('User Login', () => {
         }
         else {
           expect(res.status).toBe(400)
-          expect(res.body).toHaveProperty('message', 'Wrong password')
+          expect(res.body).toHaveProperty('msg', 'Wrong email / password')
           done()
         }
       })

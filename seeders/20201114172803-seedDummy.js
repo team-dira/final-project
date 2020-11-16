@@ -1,5 +1,6 @@
 'use strict';
-
+const bcrypt = require('bcryptjs')
+const salt = bcrypt.genSaltSync(10)
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     /**
@@ -11,6 +12,8 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+
+
     await queryInterface.bulkInsert('Users', [
       {
         name: 'David Smith',
@@ -19,7 +22,8 @@ module.exports = {
         avatar_url: 'https://randomuser.me/api/portraits/men/72.jpg',
         str_number: '33.1.1.401.3.18.103711',
         work_address: 'RS Mitra Keluarga',
-        password: '123',
+        password: bcrypt.hashSync('123', salt),
+        speciality: "Dermatologists",
         role: 'adviseryBoard',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -31,7 +35,8 @@ module.exports = {
         avatar_url: 'https://randomuser.me/api/portraits/men/71.jpg',
         str_number: '33.1.1.401.3.18.103800',
         work_address: 'RS Mitra Keluarga',
-        password: 'didadadida',
+        password: bcrypt.hashSync('123', salt),
+        speciality: 'Cardiologists',
         role: 'doctor',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -43,7 +48,8 @@ module.exports = {
         avatar_url: 'https://randomuser.me/api/portraits/women/72.jpg',
         str_number: '33.1.1.405.3.18.103800',
         work_address: 'RS Mitra Keluarga',
-        password: '123',
+        password: bcrypt.hashSync('123', salt),
+        speciality:'Gastroenterologists',
         role: 'adviseryBoard',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -55,7 +61,8 @@ module.exports = {
         avatar_url: 'https://randomuser.me/api/portraits/men/80.jpg',
         str_number: '33.1.1.405.3.18.103800',
         work_address: 'RS Mitra Keluarga',
-        password: '123',
+        password: bcrypt.hashSync('123', salt),
+        speciality:'Endocrinologists',
         role: 'adviseryBoard',
         createdAt: new Date(),
         updatedAt: new Date(),
