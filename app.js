@@ -1,8 +1,10 @@
-require('dotenv').config();
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')
+  require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const errorHandler = require('./middlewares/errorHandler');
 const routes = require('./routes/index');
 
@@ -13,8 +15,8 @@ app.use(cors());
 app.use('/', routes);
 app.use(errorHandler);
 
-// app.listen(PORT, () => {
-//   console.log(`listen on ${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`listen on ${PORT}`);
+});
 
 module.exports = app;

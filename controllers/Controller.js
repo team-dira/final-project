@@ -1,121 +1,119 @@
-const { User, UserPost } = require('../models')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-
+const { User, UserPost } = require('../models');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 class Controller {
   static login(req, res, next) {
-    let { email, password } = req.body
+    let { email, password } = req.body;
     User.findOne({
       where: {
-        email
-      }
+        email,
+      },
     })
-      .then(user => {
-        console.log(user)
+      .then((user) => {
+        console.log(user);
         if (!user) {
-          console.log('err')
+          console.log('err');
           throw {
-            msg: 'Wrong email / password'
-          }
-        }
-        else {
-          console.log('masuk')
-          const validPassword = bcrypt.compareSync(password, user.password)
+            msg: 'Wrong email / password',
+          };
+        } else {
+          console.log('masuk');
+          const validPassword = bcrypt.compareSync(password, user.password);
           if (!validPassword) {
             throw {
-              msg: "Wrong email / password"
-            }
+              msg: 'Wrong email / password',
+            };
           } else {
-            console.log('masuk jwt')
-            const access_token = jwt.sign({
-              email: user.email,
-              id: user.id
-            }, process.env.JWT_SECRET)
-            console.log(access_token)
+            console.log('masuk jwt');
+            const access_token = jwt.sign(
+              {
+                email: user.email,
+                id: user.id,
+              },
+              process.env.JWT_SECRET
+            );
+            console.log(access_token);
             res.status(200).json({
-              message: "Login Succeed",
+              message: 'Login Succeed',
               access_token: access_token,
-              email: user.email
-            })
+              email: user.email,
+            });
           }
         }
       })
-      .catch(err => {
-        next(err)
-      })
+      .catch((err) => {
+        next(err);
+      });
   }
 
   static fetchUsers(req, res) {
-    User.findAll()
-      .then(data => {
-        res.status(200).json(data)
-      })
+    User.findAll().then((data) => {
+      res.status(200).json(data);
+    });
   }
 
   static getPosts(req, res) {
-    UserPost.findAll({include: User})
-      .then((posts) => {
-        console.log(posts)
-        res.status(200).json(posts);
-      })
+    UserPost.findAll({ include: User }).then((posts) => {
+      console.log(posts);
+      res.status(200).json(posts);
+    });
   }
 
   static getPostById(req, res, next) {
     UserPost.findOne({
-      where: { id: +req.params.id }
+      where: { id: +req.params.id },
     })
-      .then(data => {
+      .then((data) => {
         if (data) {
-          res.status(200).json(data)
-        }
-        else {
+          res.status(200).json(data);
+        } else {
           throw {
-            msg: 'Not Found'
-          }
+            msg: 'Not Found',
+          };
         }
       })
-      .catch(err => {
-        next(err)
-      })
+      .catch((err) => {
+        next(err);
+      });
   }
 
   static createPost(req, res, next) {
-    const { title, thumbnail_url, caption } = req.body
+    const { title, thumbnail_url, caption } = req.body;
     UserPost.create({
       title,
       thumbnail_url,
       caption,
-      UserId: req.decodedUser.id
+      UserId: req.decodedUser.id,
     })
-      .then(data => {
+      .then((data) => {
         res.status(201).json({
           data: data,
-          msg: 'create post succeed'
-        })
+          msg: 'create post succeed',
+        });
       })
-      .catch(err => {
-        console.log(err.errors[0].message)
-        next(err)
-      })
+      .catch((err) => {
+        console.log(err.errors[0].message);
+        next(err);
+      });
   }
 
   static delPostById(req, res, next) {
-    const { id } = req.params
+    const { id } = req.params;
     UserPost.destroy({
       where: {
-        id: id
-      }
+        id: id,
+      },
     })
-      .then(_ => {
+      .then((_) => {
         res.status(200).json({
-          msg: 'Delete succeed'
-        })
+          msg: 'Delete succeed',
+        });
       })
-      .catch(err => {
-        res.status(400).json(err)
-      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
   }
 }
 
-module.exports = Controller
+module.exports = Controller;
