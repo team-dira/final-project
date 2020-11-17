@@ -10,13 +10,13 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-    */
+     */
     await queryInterface.bulkInsert('Users', [
       {
         name: 'David Smith',
         username: 'David32prof',
         email: 'David@mail.com',
-        avatar_url: 'David.png',
+        avatar_url: 'https://minotar.net/helm/user/100.png',
         str_number: '33.1.1.401.3.18.103711',
         work_address: 'RS Mitra Keluarga',
         password: '123',
@@ -28,7 +28,7 @@ module.exports = {
         name: 'arief rachman',
         username: 'arief',
         email: 'arief@mail.com',
-        avatar_url: 'David.png',
+        avatar_url: 'https://minotar.net/avatar/user.png',
         str_number: '33.1.1.401.3.18.103800',
         work_address: 'RS Mitra Keluarga',
         password: 'didadadida',
@@ -40,7 +40,7 @@ module.exports = {
         name: 'adrian',
         username: 'adss',
         email: 'adrian@mail.com',
-        avatar_url: 'adrian.png',
+        avatar_url: 'https://minotar.net/bust/user/100.png',
         str_number: '33.1.1.405.3.18.103800',
         work_address: 'RS Mitra Keluarga',
         password: '123',
@@ -52,7 +52,7 @@ module.exports = {
         name: 'Bos Dira',
         username: 'dirabbieto',
         email: 'yoi@mail.com',
-        avatar_url: 'dira.png',
+        avatar_url: 'https://minotar.net/cube/user/100.png',
         str_number: '33.1.1.405.3.18.103800',
         work_address: 'RS Mitra Keluarga',
         password: '123',
@@ -60,8 +60,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-      
-    ])
+    ]);
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -71,6 +70,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Users', null, {})
-  }
+    await queryInterface.bulkDelete('Users', null, {});
+  },
 };
