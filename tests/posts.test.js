@@ -2,8 +2,9 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken')
 const app = require('../app');
 const { UserPost, User } = require('../models');
+const JWT_SECRET = 'wrathofgod'
 
-
+let doctorId
 let postId
 let doctorToken
 let advisorToken
@@ -37,12 +38,16 @@ describe('posts test', () => {
   beforeAll((done) => {
     User.create(doctorAccount)
       .then(data => {
-        doctorToken = jwt.sign({ id: data.id, email: data.email }, process.env.JWT_SECRET)
+        doctorId = data.id
+        console.log(data.id, 'doctorId')
+        doctorToken = jwt.sign({ email: data.email, id: data.id }, JWT_SECRET)
+        console.log(doctorToken)
         return User.create(advisorAccount)
       })
       .then(data => {
         advisorId = data.id
-        advisorToken = jwt.sign({ id: data.id, email: data.email }, process.env.JWT_SECRET)
+        advisorToken = jwt.sign({ email: data.email, id: data.id }, JWT_SECRET)
+        console.log(advisorToken)
         return UserPost.create({
           title: 'Testing Corona',
           thumbnail_url: 'corona.png',
@@ -51,10 +56,14 @@ describe('posts test', () => {
         })
       })
       .then((data) => {
+        console.log(data.UserId, '>>UserId')
         postId = data.id
+        console.log(data.id, '>>>postId beforeAll')
+        console.log('succes setting')
         done()
       })
       .catch(err => {
+        console.log(err)
         done(err)
       })
   })
@@ -62,12 +71,22 @@ describe('posts test', () => {
   afterAll((done) => {
     User.destroy({
       where: {},
-      truncate: true
+      truncate: true,
+      cascade: true
     })
       .then(_ => {
+        return UserPost.destroy({
+          where: {},
+          truncate: true,
+          cascade: true
+        })
+      })
+      .then(_ => {
+        console.log('success destroying')
         done()
       })
       .catch(err => {
+        console.log(err)
         done(err)
       })
   })
@@ -106,19 +125,6 @@ describe('posts test', () => {
           }
         });
     })
-
-    test('fail because no authentication', (done) => {
-      request(app)
-        .get(`/posts`)
-        .expect(400)
-        .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            expect(res.body).toHaveProperty('msg', 'cannot access');
-          }
-        });
-    })
   })
 
   describe('/POST', () => {
@@ -151,7 +157,7 @@ describe('posts test', () => {
           title: 'Testing Article',
           thumbnail_url: 'disease.png',
           caption: 'Lorem ipsum dolor sit amet bla bla bla',
-          UserId: 0,
+          UserId: doctorId,
         })
         .expect(400)
         .end(function (err, res) {
@@ -189,13 +195,29 @@ describe('posts test', () => {
   })
 
   describe('Delete posts', () => {
+    test('fail delete because unauthorized', (done) => {
+      request(app)
+        .delete(`/posts/${postId}`)
+        .set('access_token', doctorToken)
+        .expect(400)
+        .end((err, res) => {
+          if (err) {
+            done(err)
+          }
+          else {
+            expect(res.body).toHaveProperty('msg', 'Unauthorized')
+            done()
+          }
+        })
+    })
+
+
     test('success deleting post', (done) => {
       request(app)
         .delete(`/posts/${postId}`)
         .set('access_token', advisorToken)
         .expect(200)
         .end((err, res) => {
-          console.log(postId,advisorId)
           if (err) {
             done(err)
           }
@@ -219,21 +241,8 @@ describe('posts test', () => {
           }
         })
     })
-    test('fail delete because unauthorized', (done) => {
-      request(app)
-        .delete(`/posts/${postId}`)
-        .expect(400)
-        .set('access_token', doctorToken)
-        .end((err, res) => {
-          if (err) {
-            done(err)
-          }
-          else {
-            expect(res.body).toHaveProperty('msg', 'Unauthorized')
-            done()
-          }
-        })
-    })
+
+
 
     test('fail delete because no post found', (done) => {
       request(app)

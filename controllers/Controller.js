@@ -12,18 +12,22 @@ class Controller {
       }
     })
       .then(user => {
+        console.log(user)
         if (!user) {
+          console.log('err')
           throw {
-            msg: 'wrong email / password'
+            msg: 'Wrong email / password'
           }
         }
         else {
+          console.log('masuk')
           const validPassword = bcrypt.compareSync(password, user.password)
           if (!validPassword) {
             throw {
-              name: "invalid email / password"
+              msg: "Wrong email / password"
             }
           } else {
+            console.log('masuk jwt')
             const access_token = jwt.sign({
               email: user.email,
               id: user.id
@@ -42,24 +46,19 @@ class Controller {
       })
   }
 
-  static fetchUsers(req, res, next) {
+  static fetchUsers(req, res) {
     User.findAll()
       .then(data => {
         res.status(200).json(data)
       })
-      .catch(err => {
-        res.status(400).json(err)
-      })
   }
 
-  static getPosts(req, res, next) {
-    UserPost.findAll()
+  static getPosts(req, res) {
+    UserPost.findAll({include: User})
       .then((posts) => {
+        console.log(posts)
         res.status(200).json(posts);
       })
-      .catch((err) => {
-        next(err);
-      });
   }
 
   static getPostById(req, res, next) {
@@ -72,7 +71,7 @@ class Controller {
         }
         else {
           throw {
-            msg: 'cannot found'
+            msg: 'Not Found'
           }
         }
       })
@@ -96,6 +95,7 @@ class Controller {
         })
       })
       .catch(err => {
+        console.log(err.errors[0].message)
         next(err)
       })
   }
@@ -113,7 +113,7 @@ class Controller {
         })
       })
       .catch(err => {
-        next(err)
+        res.status(400).json(err)
       })
   }
 }
